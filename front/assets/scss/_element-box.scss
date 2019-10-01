@@ -1,0 +1,19 @@
+// breakpoints
+$mq-breakpoints: (
+       small:  560px,
+      medium:  720px,
+       large:  960px,
+     x-large: 1200px,
+    xx-large: 1600px
+);
+
+.element-box {
+  &__text {
+
+    min-height: 30px;
+
+    @include mq(large) {
+
+    }
+  }
+}

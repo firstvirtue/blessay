@@ -1,17 +1,17 @@
 <template>
   <section class="container">
     <div>
-      <ElementBoxText></ElementBoxText>
+      <TextElementBox></TextElementBox>
     </div>
   </section>
 </template>
 
 <script>
-import ElementBoxText from '~/components/ElementBoxText.vue';
+import TextElementBox from '~/components/TextElementBox.vue';
 
 export default {
   components: {
-    ElementBoxText
+    TextElementBox
   },
   mounted() {
 
