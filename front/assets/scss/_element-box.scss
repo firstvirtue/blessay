@@ -10,7 +10,7 @@ $mq-breakpoints: (
 .element-box {
   &__text {
 
-    min-height: 30px;
+    min-height: 1em;
 
     @include mq(large) {
 

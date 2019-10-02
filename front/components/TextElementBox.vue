@@ -1,7 +1,13 @@
 <template>
-  <p class="element-box element-box__text" @input="inputKey" contenteditable="true">
-    {{content}}
-  </p>
+  <!-- <div class=""> -->
+    <p class="element-box element-box__text element-box__text--editable" contenteditable="true">
+      {{content}}
+    </p>
+    <!-- <p class="element-box element-box__text element-box__text--editable" @input="inputKey" contenteditable="true">
+      <img src="https://picsum.photos/id/237/200/300" alt="">
+      asdasdasd
+    </p> -->
+  <!-- </div> -->
 </template>
 
 <script>
@@ -20,7 +26,12 @@ export default {
   methods: {
     inputKey(e) {
       // console.log(e);
-      console.log(this.content);
+      this.content = e.target.innerText;
+
+      // [TODO] patch
+    },
+    makeElement() {
+
     }
   }
 }
