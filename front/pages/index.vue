@@ -3,7 +3,7 @@
     <h1>text</h1>
     <div id="doc-container" class="container" contenteditable="true">
       <section v-for="section in article.contentModel" v-bind:key="section.id">
-        <p class="element-box element-box__text element-box__text--editable" v-for="item in section.contents" v-bind:key="item.id">{{item.content}}</p>
+        <p class="element-box element-box__text element-box__text--editable" v-for="item in section.contents" v-bind:key="item.id" :name="item.id">{{item.content}}</p>
       </section>
     </div>
   </section>
@@ -26,46 +26,45 @@ export default {
 
     observeKey$
     .pipe(
-      map( e => ({
-        code: e.keyCode,
-        data: e.key
-      })
-      )
+
     )
-    .subscribe((input) => {
-      // e.preventDefault();
+    .subscribe(e => {
 
       var sel = window.getSelection();
       if(sel.rangeCount === 0) return;
 
       var range = sel.getRangeAt(0);
 
-
-      // console.log(range);
       this.selectionRange = {
         startOffset: range.startOffset,
-        endOffset: range.endOffset
+        endOffset: range.endOffset,
+        currentElement: range.startContainer.nodeType === 1 ? range.startContainer : range.startContainer.parentElement
+      }
+
+      let input = {
+        code: e.keyCode,
+        data: e.key
       }
 
       switch (input.code) {
         case 13:
-          console.log(range);
+          e.preventDefault();
           this.returnData(input);
           break;
         case 8:
-          console.log(range);
+          e.preventDefault();
           this.removeData(input);
           break;
         case 37:
         case 38:
         case 39:
         case 40:
-          this.moveCursor(input);
           break;
         default:
+          e.preventDefault();
           this.addData(input);
-          // this.inputDefault(range);
       }
+
 
       // if((e.ctrlKey || e.metaKey) && String.fromCharCode(e.which).toLowerCase() == 'z') {
       //   // TODO: history
@@ -73,7 +72,10 @@ export default {
 
     });
 
-    observeKey$.subscribe(e => e.preventDefault());
+    observeKey$.subscribe(e => {
+
+      // TODO: 한글 막기
+    });
 
     // TODO: SAVE
     observeKey$.pipe(
@@ -81,57 +83,84 @@ export default {
     )
     .subscribe(() => {
       console.log('저장');
-      console.log(this.article);
+      // console.log(this.article);
     });
-
-    function makeid(length) {
-      var result           = '';
-      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      var charactersLength = characters.length;
-      for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
-      return result;
-    }
-
-    // console.log(makeid(5));
 
   },
   methods: {
     returnData(input) {
 
+      function makeid(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+      }
+
+      let name = this.selectionRange.currentElement.getAttribute('name');
+
+      let idx = 0;
+      this.article.contentModel[0].contents.forEach((e, i) => {
+        if(e.id === name) {
+          idx = i;
+        }
+      });
+
+      // console.log(idx);
+
+      this.article.contentModel[0].contents.splice(idx + 1, 0, {
+        id: makeid(5),
+        type: 'paragraph',
+        content: ''
+      })
+
     },
     removeData(input) {
 
     },
-    moveCursor(input) {
-
-    },
     addData(input) {
 
-      let target = this.article.contentModel[0].contents[0].content;
+      let uiTarget = this.selectionRange.currentElement.childNodes[0];
+      let name = this.selectionRange.currentElement.getAttribute('name');
+      // console.log(this.selectionRange.currentElement);
+      var filtered = this.article.contentModel[0].contents.filter(function(el) {
+        return el.id === name;
+      });
 
+      let target = filtered[0];
       const pos = this.selectionRange.startOffset;
-
-      // this.doc.setSelectionRange(this.selectionRange.startOffset, this.selectionRange.endOffset)
 
       var range = document.createRange();
       var sel = window.getSelection();
-
       range.collapse(true);
       sel.removeAllRanges();
 
-      this.article.contentModel[0].contents[0].content = [target.slice(0, pos), input.data, target.slice(pos)].join('');
+      target.content = [target.content.slice(0, pos), input.data, target.content.slice(pos)].join('');
 
-
-      // console.log(this.doc.childNodes[0].childNodes[0].childNodes[0]);
       const self = this;
       setTimeout(function() {
-        range.setStart(self.doc.childNodes[0].childNodes[0].childNodes[0], self.selectionRange.startOffset + 1);
+        range.setStart(uiTarget, self.selectionRange.startOffset + 1);
         sel.addRange(range);
-      }, 1);
+      }, 0);
 
+    },
+    updateCursor() {
+      var sel = window.getSelection();
+      if(sel.rangeCount === 0) return false;
 
+      var range = sel.getRangeAt(0);
+      this.currentElement = range.startContainer.parentElement;
+      this.currentElement.classList.add('is-selected');
+
+      this.selectionRange = {
+        startOffset: range.startOffset,
+        endOffset: range.endOffset
+      }
+
+      return true;
     }
   },
   data() {
@@ -142,20 +171,20 @@ export default {
         publishedDate: '2019.10.22',
         contentModel: [
           {
-            id: 'sd09',
+            id: 'sd039',
             contents: [
               {
-                id: 'qwee',
+                id: 'qw1se',
                 type: 'paragraph',
                 content: '한글의 위대함'
               },
               {
-                id: 'qwe1',
+                id: 'lw1e1',
                 type: 'paragraph',
                 content: '한글의 위대함'
               },
               {
-                id: 'axe1',
+                id: 'kaxe1',
                 type: 'paragraph',
                 content: '한글의 위대함'
               }
