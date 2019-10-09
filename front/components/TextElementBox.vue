@@ -1,12 +1,12 @@
 <template>
   <!-- <div class=""> -->
-    <p class="element-box element-box__text element-box__text--editable" contenteditable="true">
+    <!-- <p class="element-box element-box__text element-box__text--editable">
       {{content}}
-    </p>
-    <!-- <p class="element-box element-box__text element-box__text--editable" @input="inputKey" contenteditable="true">
-      <img src="https://picsum.photos/id/237/200/300" alt="">
-      asdasdasd
     </p> -->
+    <!-- <figure>
+      <img src="https://picsum.photos/id/237/200/300" alt="">
+    </figure> -->
+    <p class="element-box element-box__text element-box__text--editable">한글날</p>
   <!-- </div> -->
 </template>
 
@@ -16,7 +16,7 @@ export default {
     return {
       id: '',
       articleId: '',
-      content: 'qwe',
+      content: '',
       date: ''
     }
   },
