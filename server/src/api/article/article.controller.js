@@ -57,6 +57,7 @@ exports.createArticle = async (ctx) => {
     category,
     title,
     desc,
+    contentIds,
     editor,
     updatedDate,
     publishedData,
@@ -67,6 +68,7 @@ exports.createArticle = async (ctx) => {
     category,
     title,
     desc,
+    contentIds,
     editor,
     updatedDate,
     publishedData,
@@ -75,6 +77,52 @@ exports.createArticle = async (ctx) => {
 
   try {
     await article.save();
+  } catch(e) {
+    // HTTP 상태 500 와 Internal Error 라는 메시지를 반환하고,
+    // 에러를 기록합니다.
+    return ctx.throw(500, e);
+  }
+
+  // 저장한 결과를 반환합니다.
+  ctx.body = article;
+};
+
+exports.updateArticle = async (ctx) => {
+  console.log('-------------------');
+  console.log(ctx.request.body);
+  console.log('-------------------');
+
+  const id = ctx.params.articleId;
+
+  // request body 에서 값들을 추출합니다
+  const {
+    category,
+    title,
+    desc,
+    contentIds,
+    editor,
+    updatedDate,
+    publishedData,
+    status
+  } = ctx.request.body;
+
+  let article = new Article({
+    category,
+    title,
+    desc,
+    contentIds,
+    editor,
+    updatedDate,
+    publishedData,
+    status
+  });
+
+  try {
+    article = await article.findByIdAndUpdate(id, article, {
+      upsert: true, // 이 값을 넣어주면 데이터가 존재하지 않으면 새로 만들어줍니다
+      new: true // 이 값을 넣어줘야 반환하는 값이 업데이트된 데이터입니다.
+                // 이 값이 없으면 ctx.body = book 했을때 업데이트 전의 데이터를 보여줍니다.
+    });
   } catch(e) {
     // HTTP 상태 500 와 Internal Error 라는 메시지를 반환하고,
     // 에러를 기록합니다.

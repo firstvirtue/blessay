@@ -11,7 +11,7 @@ article.get('/:articleId/:elementId', articleCtrl.getElement);
 article.post('/', multer({dest:'tmp/uploads/'}).single('myfile'), articleCtrl.createArticle);
 article.post('/:articleId', multer({ dest:'tmp/uploads/' }).single('recfile'), articleCtrl.createElement);
 
-// article.patch('/:id', articleCtrl.updateArticle);
+article.patch('/:articleId', articleCtrl.updateArticle);
 // article.patch('/:id/:id', articleCtrl.updateElement);
 
 // article.delete('/:id', articleCtrl.deleteArticle);
