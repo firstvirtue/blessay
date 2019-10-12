@@ -22,7 +22,7 @@ export default {
 
     const observKeyup$ = fromEvent(window, 'keyup');
     const observeKey$ = fromEvent(window, 'keydown');
-    this.doc = document.getElementById('doc-container');
+    // this.doc = document.getElementById('doc-container');
 
     observeKey$
     .pipe(
@@ -34,6 +34,7 @@ export default {
       if(sel.rangeCount === 0) return;
 
       var range = sel.getRangeAt(0);
+      // console.log(range);
 
       this.selectionRange = {
         startOffset: range.startOffset,
@@ -103,19 +104,26 @@ export default {
       let name = this.selectionRange.currentElement.getAttribute('name');
 
       let idx = 0;
-      this.article.contentModel[0].contents.forEach((e, i) => {
-        if(e.id === name) {
+      let currentData;
+      this.article.contentModel[0].contents.forEach((el, i) => {
+        if(el.id === name) {
           idx = i;
+          currentData = el;
         }
       });
 
-      // console.log(idx);
+      const cursorBefore = this.selectionRange.currentElement.innerText.slice(0, this.selectionRange.endOffset);
+      const cursorAfter = this.selectionRange.currentElement.innerText.slice(this.selectionRange.endOffset);
+
+      currentData.content = cursorBefore;
 
       this.article.contentModel[0].contents.splice(idx + 1, 0, {
         id: makeid(5),
         type: 'paragraph',
-        content: ''
-      })
+        content: cursorAfter
+      });
+
+      this.moveCursor();
 
     },
     removeData(input) {
@@ -147,20 +155,18 @@ export default {
       }, 0);
 
     },
-    updateCursor() {
-      var sel = window.getSelection();
-      if(sel.rangeCount === 0) return false;
+    moveCursor() {
+      const self = this;
 
-      var range = sel.getRangeAt(0);
-      this.currentElement = range.startContainer.parentElement;
-      this.currentElement.classList.add('is-selected');
+      setTimeout(function() {
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.collapse(true);
+        sel.removeAllRanges();
+        range.setStart(self.selectionRange.currentElement.nextSibling, 0);
+        sel.addRange(range);
+      }, 0);
 
-      this.selectionRange = {
-        startOffset: range.startOffset,
-        endOffset: range.endOffset
-      }
-
-      return true;
     }
   },
   data() {
