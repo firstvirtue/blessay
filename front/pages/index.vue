@@ -47,6 +47,8 @@ export default {
         data: e.key
       }
 
+      // console.log(input.code);
+
       switch (input.code) {
         case 13:
           e.preventDefault();
@@ -60,6 +62,18 @@ export default {
         case 38:
         case 39:
         case 40:
+          // 방향키
+          break;
+        case 9: //tab
+        case 16: // shift
+        case 17: // control
+        case 18: // alt(option)
+        case 20: // caps lock
+        case 91: // command
+          break;
+        case 229:
+          e.preventDefault();
+          this.automataHangeul(input);
           break;
         default:
           e.preventDefault();
@@ -89,6 +103,11 @@ export default {
 
   },
   methods: {
+    automataHangeul(input) {
+
+      console.log(input);
+
+    },
     returnData(input) {
 
       function makeid(length) {
