@@ -101,7 +101,7 @@ export default {
         return result;
       }
 
-      let name = this.selectionRange.currentElement.getAttribute('name');
+      const name = this.selectionRange.currentElement.getAttribute('name');
 
       let idx = 0;
       let currentData;
@@ -127,6 +127,57 @@ export default {
 
     },
     removeData(input) {
+      // 라인 변경
+      if(this.selectionRange.endOffset === 0) {
+
+        const name = this.selectionRange.currentElement.getAttribute('name');
+        const prev = this.selectionRange.currentElement.previousSibling;
+
+        if(prev === null) return;
+
+        let idx = 0;
+        let currentData;
+        this.article.contentModel[0].contents.forEach((el, i) => {
+          if(el.id === name) {
+            idx = i;
+            currentData = el;
+          }
+        });
+
+        this.article.contentModel[0].contents[idx - 1].content += currentData.content;
+
+        this.article.contentModel[0].contents.splice(idx, 1);
+
+        this.moveCursorUp(prev.childNodes[0], prev.innerText.length);
+
+      } else {
+        // 단순 제거
+
+        const name = this.selectionRange.currentElement.getAttribute('name');
+        let currentData;
+        this.article.contentModel[0].contents.forEach((el, i) => {
+          if(el.id === name) {
+            currentData = el;
+          }
+        });
+
+        let uiTarget = this.selectionRange.currentElement.childNodes[0];
+
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.collapse(true);
+        sel.removeAllRanges();
+
+        const pos = this.selectionRange.startOffset;
+
+        currentData.content = [currentData.content.slice(0, pos - 1), currentData.content.slice(pos)].join('');
+
+        const self = this;
+        setTimeout(function() {
+          range.setStart(uiTarget, self.selectionRange.startOffset - 1);
+          sel.addRange(range);
+        }, 0);
+      }
 
     },
     addData(input) {
@@ -167,6 +218,19 @@ export default {
         sel.addRange(range);
       }, 0);
 
+    },
+    moveCursorUp(node, pos) {
+      const self = this;
+
+      setTimeout(function() {
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.collapse(true);
+        sel.removeAllRanges();
+        range.setStart(node, pos);
+        sel.addRange(range);
+      }, 0);
+
     }
   },
   data() {
@@ -204,5 +268,7 @@ export default {
 </script>
 
 <style>
-
+.container {
+  white-space: pre;
+}
 </style>
