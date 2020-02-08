@@ -10,12 +10,14 @@
   "dependencies": {
     "@koa/multer": "^2.0.2",
     "joi": "^14.3.1",
+    "knex": "^0.20.8",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa2-cors": "^2.0.6",
     "koa2-static-middleware": "^1.0.3",
     "multer": "^1.4.2",
+    "objection": "^2.1.2",
     "pg": "^7.17.0"
   },
   "devDependencies": {
