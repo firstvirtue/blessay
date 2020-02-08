@@ -25,21 +25,67 @@ exports.localRegister = async (ctx) => {
   const newAccount = {
     email: email,
     username: username,
-    password: password,
+    password: password, // TODO: hash
     created_on: new Date().toISOString()
   }
 
   try {
-    const account = await Account.query().insert(newAccount);
-
-    ctx.body = account;
-  } catch(e) {
-    console.log(e);
+    account = await Account.query().select('email', 'password').where('email', '=', email);
+  } catch (e) {
+    // console.log(e);
+    ctx.throw(500, e);
   }
+
+
+  if(used) {
+    ctx.status = 409;
+    ctx.body = {
+      key: 'email'
+    }
+
+    return;
+  }
+
+  let account = null;
+  try {
+    account = await Account.query().insert(newAccount);
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  ctx.body = account;
 }
 
 exports.localLogin = async (ctx) => {
-  ctx.body = 'login';
+
+  const schema = Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required()
+  });
+
+  const result = Joi.validate(ctx.request.body, schema);
+
+  if(result.error) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { email, password } = ctx.request.body;
+
+  let account = null;
+  try {
+    account = await Account.query().select('email', 'password').where('email', '=', email);
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  if(!account.length || account[0].password !== password) {
+    ctx.status = 403;
+    return;
+  }
+
+
+  ctx.body = account;
 }
 
 exports.exists = async (ctx) => {
