@@ -58,12 +58,12 @@ exports.update = async (ctx) => {
       return client
         .query('UPDATE article SET content = $2 WHERE ID = $1', [id, data.content]);
     });
-  
+
   ctx.body = res.rows[0];
 }
 
 exports.upload = async (ctx) => {
-  
+
   console.log(ctx.request);
 
   // 성공 시 response format

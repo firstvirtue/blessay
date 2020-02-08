@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const Account = require('../../model/account');
 
 exports.localRegister = async (ctx) => {
 
@@ -14,8 +15,27 @@ exports.localRegister = async (ctx) => {
     ctx.status = 400;
     return;
   }
-  
-  ctx.body = 'register';
+
+  const {
+    email,
+    username,
+    password
+  } = ctx.request.body;
+
+  const newAccount = {
+    email: email,
+    username: username,
+    password: password,
+    created_on: new Date().toISOString()
+  }
+
+  try {
+    const account = await Account.query().insert(newAccount);
+
+    ctx.body = account;
+  } catch(e) {
+    console.log(e);
+  }
 }
 
 exports.localLogin = async (ctx) => {
