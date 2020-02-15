@@ -82,7 +82,6 @@ exports.localLogin = async (ctx) => {
     return;
   }
 
-
   ctx.body = account;
 }
 
