@@ -29,15 +29,14 @@ exports.localRegister = async (ctx) => {
     created_on: new Date().toISOString()
   }
 
+  let used = null;
   try {
-    account = await Account.query().select('email', 'password').where('email', '=', email);
+    used = await Account.query().select('email', 'password').where('email', '=', email);
   } catch (e) {
-    // console.log(e);
     ctx.throw(500, e);
   }
 
-
-  if(used) {
+  if(used.length > 0) {
     ctx.status = 409;
     ctx.body = {
       key: 'email'
@@ -46,7 +45,6 @@ exports.localRegister = async (ctx) => {
     return;
   }
 
-  let account = null;
   try {
     account = await Account.query().insert(newAccount);
   } catch (e) {
@@ -89,7 +87,9 @@ exports.localLogin = async (ctx) => {
 }
 
 exports.exists = async (ctx) => {
-  ctx.body = 'exists';
+  let account = await Account.query().select('email', 'password').where('email', '=', 'firstvirtue@naver.com');
+  console.log(account);
+  ctx.body = account;
 }
 
 exports.logout = async (ctx) => {
