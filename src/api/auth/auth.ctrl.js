@@ -72,12 +72,12 @@ exports.localLogin = async (ctx) => {
 
   let account = null;
   try {
-    account = await Account.query().select('email', 'password').where('email', '=', email);
+    account = await Account.query().select('username', 'email', 'password', 'created_on').where('email', '=', email).first();
   } catch (e) {
     ctx.throw(500, e);
   }
 
-  if(!account.length || account[0].password !== password) {
+  if(account.password !== password) {
     ctx.status = 403;
     return;
   }
