@@ -82,15 +82,40 @@ exports.localLogin = async (ctx) => {
     return;
   }
 
+  let token = null;
+  try {
+    token = await account.generateToken();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  console.log(token);
+
+  ctx.cookies.set('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
   ctx.body = account;
 }
 
 exports.exists = async (ctx) => {
-  let account = await Account.query().select('email', 'password').where('email', '=', 'firstvirtue@naver.com');
-  console.log(account);
-  ctx.body = account;
+  const { key, value } = ctx.params;
+  let account = null;
+
+  try {
+    account = await (key === 'email' ?
+      Account.query().select('username').where('email', '=', value).first() :
+      Account.query().select('username').where('username', '=', value).first())
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  ctx.body = {
+    exists: account !== null && account !== undefined
+  };
 }
 
 exports.logout = async (ctx) => {
-  ctx.body = 'logout';
+  ctx.cookies.set('access_token', null, {
+    maxAge: 0,
+    httpOnly: true
+  });
+  ctx.status = 204;
 }
