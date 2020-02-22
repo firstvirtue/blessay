@@ -1,17 +1,16 @@
 require('dotenv').config();
-
 const Koa = require('koa');
 const Router = require('koa-router');
 const serve = require('koa2-static-middleware');
 const bodyParser = require('koa-bodyparser');
 // const { Pool } = require('pg');
 const cors = require('koa2-cors');
-
-const api = require('./api');
-
 const Knex = require('knex');
-const knexConfig = require('./knexfile');
 const { Model, ForeignKeyViolationError, ValidationError } = require('objection');
+
+const knexConfig = require('./knexfile');
+const { jwtMiddleware } = require('./lib/token');
+const api = require('./api');
 
 // Initialize knex.
 const knex = Knex(knexConfig.development);
@@ -24,6 +23,7 @@ app.use(cors());
 router.use('/api', api.routes());
 
 app.use(bodyParser());
+app.use(jwtMiddleware);
 
 router.get('/uploads/*', serve(__dirname + '/../uploads'));
 

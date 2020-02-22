@@ -26,7 +26,7 @@ function generateToken(payload) {
 function decodeToken(token) {
   return new Promise(
     (resolve, reject) => {
-      jwt.verify(token, jwtSecret, (error, decode) => {
+      jwt.verify(token, jwtSecret, (error, decoded) => {
         if(error) reject(error);
         resolve(decoded);
       })
@@ -38,10 +38,14 @@ exports.generateToken = generateToken;
 
 exports.jwtMiddleware = async (ctx, next) => {
   const token = ctx.cookies.get('access_token');
+
+  // console.log(token);
   if(!token) return next();
 
   try {
     const decoded = await decodeToken(token);
+
+    console.log(decoded);
 
     if(Date.now() / 1000 - decoded.iat > 60 * 60 * 24) {
       const { _id, profile } = decoded;
