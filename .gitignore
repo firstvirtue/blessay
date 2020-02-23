@@ -3,4 +3,4 @@ tmp
 
 src/_.sql
 src/knexfile.js
-src/.env
+.env

@@ -31,7 +31,7 @@ exports.localRegister = async (ctx) => {
 
   let used = null;
   try {
-    used = await Account.query().select('email', 'password').where('email', '=', email);
+    used = await Account.query().select('email', 'password').where('email', '=', newAccount.email);
   } catch (e) {
     ctx.throw(500, e);
   }
