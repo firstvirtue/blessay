@@ -68,6 +68,21 @@ exports.update = async (ctx) => {
   ctx.body = res.rows[0];
 }
 
+exports.delete = async (ctx) => {
+  const {
+    id
+  } = ctx.params;
+
+  try {
+    await Article.query().deleteById(id);
+  } catch (e) {
+    console.log(e);
+    ctx.status = 404;
+  }
+
+  ctx.status = 200;
+}
+
 exports.upload = async (ctx) => {
 
   console.log(ctx.request);
