@@ -48,25 +48,25 @@ exports.read = async (ctx) => {
   ctx.body = res;
 }
 
-// exports.update = async (ctx) => {
-//   const {
-//     id
-//   } = ctx.params;
+exports.update = async (ctx) => {
+  const {
+    id
+  } = ctx.params;
 
-//   const data = ctx.request.body;
+  const data = ctx.request.body;
 
-//   console.log(data.content);
+  const res = await Article.query().upsertGraph({
+    id: id,
+    title: data.title,
+    writer: data.writer,
+    description: data.description,
+    created_on: new Date().toISOString(),
+    updated_on: new Date().toISOString(),
+    blocks: data.blocks
+  })
 
-//   const res = await ctx.app.pool
-//     .connect()
-//     .then(client => {
-//       client.release();
-//       return client
-//         .query('UPDATE article SET content = $2 WHERE ID = $1', [id, data.content]);
-//     });
-
-//   ctx.body = res.rows[0];
-// }
+  ctx.body = res.rows[0];
+}
 
 exports.upload = async (ctx) => {
 
