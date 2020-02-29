@@ -1,4 +1,5 @@
 const { Model } = require('objection');
+const Block = require('./block');
 
 class Article extends Model {
   static get tableName() {
@@ -18,6 +19,10 @@ class Article extends Model {
         }
       }
     }
+  }
+
+  static async beforeDelete({ asFindQuery, transaction }) {
+    await Block.query(transaction).delete().whereIn('article_id', asFindQuery().select('id'));
   }
 }
 
