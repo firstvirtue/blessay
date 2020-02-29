@@ -10,20 +10,9 @@ exports.list = async (ctx) => {
 }
 
 exports.write = async (ctx) => {
-  // const data = ctx.request.body;
+  const data = ctx.request.body;
 
-  const data = {
-    title: 'data.title',
-    writer: 'data.writer',
-    description: 'data.description',
-    blocks: [
-      { content: '1', created_on: new Date().toISOString(), updated_on: new Date().toISOString() },
-      { content: '2', created_on: new Date().toISOString(), updated_on: new Date().toISOString() },
-      { content: '3', created_on: new Date().toISOString(), updated_on: new Date().toISOString() },
-    ]
-  }
-
-  // console.log(data);
+  data.writer = 'data.writer';
 
   const res = await Article.query().insertGraph({
     title: data.title,
@@ -43,7 +32,8 @@ exports.read = async (ctx) => {
 
   const res = await Article.query()
     .eager('blocks')
-    .where('id', id);
+    .where('id', id)
+    .first();
 
   ctx.body = res;
 }
