@@ -55,7 +55,7 @@ exports.update = async (ctx) => {
     blocks: data.blocks
   })
 
-  ctx.body = res.rows[0];
+  ctx.body = res;
 }
 
 exports.delete = async (ctx) => {
