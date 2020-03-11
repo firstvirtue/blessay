@@ -39,7 +39,7 @@ exports.generateToken = generateToken;
 exports.jwtMiddleware = async (ctx, next) => {
   const token = ctx.cookies.get('access_token');
 
-  // console.log(token);
+  console.log(`jwtMiddleware token: ${token}`);
   if(!token) return next();
 
   try {

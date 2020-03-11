@@ -89,7 +89,7 @@ exports.localLogin = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  console.log(token);
+  console.log(`login token: ${token}`);
 
   ctx.cookies.set('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
   ctx.body = account;
@@ -122,6 +122,19 @@ exports.logout = async (ctx) => {
 
 exports.check = (ctx) => {
   const { user } = ctx.request;
+  // console.log(user);
+
+  if(!user) {
+    ctx.status = 403; // forbidden
+    return;
+  }
+
+  ctx.body = user.profile;
+}
+
+exports.user = (ctx) => {
+  const { user } = ctx.request;
+  // console.log(user);
 
   if(!user) {
     ctx.status = 403; // forbidden
