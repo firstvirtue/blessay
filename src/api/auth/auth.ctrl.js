@@ -89,7 +89,7 @@ exports.localLogin = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  console.log(`login token: ${token}`);
+  console.log(account);
 
   ctx.cookies.set('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
   ctx.body = account;
@@ -129,7 +129,7 @@ exports.check = (ctx) => {
     return;
   }
 
-  ctx.body = user.profile;
+  ctx.body = user;
 }
 
 exports.user = (ctx) => {
@@ -141,5 +141,5 @@ exports.user = (ctx) => {
     return;
   }
 
-  ctx.body = user.profile;
+  ctx.body = user;
 }

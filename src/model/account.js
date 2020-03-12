@@ -9,7 +9,10 @@ class Account extends Model {
   generateToken() {
     const payload = {
       _id: this.$id,
-      profile: this.username // TODO: profile
+      profile: {
+        username: this.username, // TODO: profile
+        email: this.email
+      }
     }
 
     return generateToken(payload, 'account');

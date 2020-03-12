@@ -39,13 +39,13 @@ exports.generateToken = generateToken;
 exports.jwtMiddleware = async (ctx, next) => {
   const token = ctx.cookies.get('access_token');
 
-  console.log(`jwtMiddleware token: ${token}`);
+  // console.log(`jwtMiddleware token: ${token}`);
   if(!token) return next();
 
   try {
     const decoded = await decodeToken(token);
 
-    console.log(decoded);
+    // console.log(decoded);
 
     if(Date.now() / 1000 - decoded.iat > 60 * 60 * 24) {
       const { _id, profile } = decoded;
