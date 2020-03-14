@@ -92,6 +92,7 @@ exports.localLogin = async (ctx) => {
   console.log(account);
 
   ctx.cookies.set('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
+  delete account.password;
   ctx.body = account;
 }
 
