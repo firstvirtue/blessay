@@ -38,6 +38,17 @@ exports.read = async (ctx) => {
   ctx.body = res;
 }
 
+exports.readUserArticles = async (ctx) => {
+  const username = ctx.params.user;
+
+  const res = await Article.query()
+    // .eager('blocks')
+    .select('*')
+    .where('writer', username);
+
+  ctx.body = res;
+}
+
 exports.update = async (ctx) => {
   const {
     id
