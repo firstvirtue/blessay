@@ -10,9 +10,11 @@ exports.list = async (ctx) => {
 }
 
 exports.write = async (ctx) => {
+  const { user } = ctx.request;
+
   const data = ctx.request.body;
 
-  data.writer = 'data.writer';
+  data.writer = user.profile.username;
 
   const res = await Article.query().insertGraph({
     title: data.title,
