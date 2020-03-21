@@ -57,7 +57,7 @@ exports.localRegister = async (ctx) => {
 exports.localLogin = async (ctx) => {
 
   const schema = Joi.object().keys({
-    email: Joi.string().email().required(),
+    username: Joi.string().required(),
     password: Joi.string().required()
   });
 
@@ -68,11 +68,11 @@ exports.localLogin = async (ctx) => {
     return;
   }
 
-  const { email, password } = ctx.request.body;
+  const { username, password } = ctx.request.body;
 
   let account = null;
   try {
-    account = await Account.query().select('username', 'email', 'password', 'created_on').where('email', '=', email).first();
+    account = await Account.query().select('username', 'email', 'password', 'created_on').where('username', '=', username).first();
   } catch (e) {
     ctx.throw(500, e);
   }
