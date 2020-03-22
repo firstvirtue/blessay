@@ -1,4 +1,7 @@
 const Article = require('../../model/article');
+const Block = require('../../model/block');
+const FileManager = require('../../lib/fileManager');
+const fs = require('fs');
 
 exports.list = async (ctx) => {
 
@@ -41,9 +44,9 @@ exports.write = async (ctx) => {
 
   const trx = await Article.startTransaction();
 
-  let aricle;
+  let article;
   try {
-    aricle = await Article.query().insertGraph({
+    article = await Article.query().insertGraph({
       title: data.title,
       writer: data.writer,
       description: data.description,
@@ -52,16 +55,44 @@ exports.write = async (ctx) => {
       blocks: data.blocks
     })
 
+    //article.id
+
+    // article.blocks.forEach(item => {
+    //   if(item.type === 'image') {
+    //     // await FileManager.translateResource(ctx.request.headers.host, article.id, item.content);
+
+
+    //     const regex = /uploads/gi;
+    //     const newPath = `rsc/${article.id}`;
+
+    //     const filePath = item.content.replace(/http:\/\/192.168.0.14:4000/gi, '');
+
+    //     console.log('=======');
+    //     console.log(filePath);
+    //     console.log('=======');
+
+    //     // FileManager.moveFile(filePath, `rsc/${article.id}`);
+
+    //     // const b = await Block.query().update({
+    //     //   content: newPath
+    //     // })
+    //     // .where('id', item.id);
+    //   }
+    //   // console.log(item);
+    // });
+
+    // throw new Exception();
+
     await trx.commit();
   } catch (err) {
-    console.log(err);
+    console.log(`catch: ${err}`);
     await trx.rollback();
     throw err;
   }
 
-  console.log(aricle);
+  // console.log(article);
 
-  ctx.body = aricle;
+  ctx.body = article;
 }
 
 exports.update = async (ctx) => {
@@ -112,14 +143,15 @@ exports.delete = async (ctx) => {
 
 exports.upload = async (ctx) => {
 
-  console.log(ctx.request);
+  // console.log(`${ctx.request.headers.host}/uploads/${ctx.request.file.originalname}`);
+  console.log(ctx.request.file);
 
   // 성공 시 response format
   ctx.body = {
     'success': 1,
     'file': {
       // url
-      'url': `http://localhost:4000/uploads/${ctx.request.file.originalname}`
+      'url': `http://${ctx.request.headers.host}/uploads/${ctx.request.file.filename}`
     }
   }
 }

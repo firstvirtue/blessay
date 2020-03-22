@@ -26,6 +26,7 @@ app.use(bodyParser());
 app.use(jwtMiddleware);
 
 router.get('/uploads/*', serve(__dirname + '/../uploads'));
+router.get('/rsc/*', serve(__dirname + '/../rsc'));
 
 app.use(router.routes()).use(router.allowedMethods());
 
