@@ -9,25 +9,6 @@ exports.list = async (ctx) => {
   ctx.body = res;
 }
 
-exports.write = async (ctx) => {
-  const { user } = ctx.request;
-
-  const data = ctx.request.body;
-
-  data.writer = user.profile.username;
-
-  const res = await Article.query().insertGraph({
-    title: data.title,
-    writer: data.writer,
-    description: data.description,
-    created_on: new Date().toISOString(),
-    updated_on: new Date().toISOString(),
-    blocks: data.blocks
-  })
-
-  ctx.body = res;
-}
-
 exports.read = async (ctx) => {
 
   const id = ctx.params.id;
@@ -51,6 +32,38 @@ exports.readUserArticles = async (ctx) => {
   ctx.body = res;
 }
 
+exports.write = async (ctx) => {
+  const { user } = ctx.request;
+
+  const data = ctx.request.body;
+
+  data.writer = user.profile.username;
+
+  const trx = await Article.startTransaction();
+
+  let aricle;
+  try {
+    aricle = await Article.query().insertGraph({
+      title: data.title,
+      writer: data.writer,
+      description: data.description,
+      created_on: new Date().toISOString(),
+      updated_on: new Date().toISOString(),
+      blocks: data.blocks
+    })
+
+    await trx.commit();
+  } catch (err) {
+    console.log(err);
+    await trx.rollback();
+    throw err;
+  }
+
+  console.log(aricle);
+
+  ctx.body = aricle;
+}
+
 exports.update = async (ctx) => {
   const {
     id
@@ -58,17 +71,28 @@ exports.update = async (ctx) => {
 
   const data = ctx.request.body;
 
-  const res = await Article.query().upsertGraph({
-    id: id,
-    title: data.title,
-    writer: data.writer,
-    description: data.description,
-    created_on: new Date().toISOString(),
-    updated_on: new Date().toISOString(),
-    blocks: data.blocks
-  })
+  const trx = await Article.startTransaction();
+  let article;
 
-  ctx.body = res;
+  try {
+    article = await Article.query().upsertGraph({
+      id: id,
+      title: data.title,
+      writer: data.writer,
+      description: data.description,
+      created_on: new Date().toISOString(),
+      updated_on: new Date().toISOString(),
+      blocks: data.blocks
+    })
+
+    await trx.commit();
+  } catch (err) {
+    console.log(err);
+    await trx.rollback();
+    throw err;
+  }
+
+  ctx.body = article;
 }
 
 exports.delete = async (ctx) => {
