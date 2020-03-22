@@ -3,7 +3,7 @@ tmp
 
 src/_.sql
 src/knexfile.js
-uploads/
+postassets/
 rsc/
 
 # dotenv

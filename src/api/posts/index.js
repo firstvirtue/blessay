@@ -2,14 +2,13 @@ const Router = require('koa-router');
 const postsCtrl = require('./posts.ctrl');
 const multer = require('@koa/multer');
 const path = require('path');
+const mkdirp = require('mkdirp');
 
 const posts = new Router();
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
 
-    // console.log(req.headers.articleid);
-
-    callback(null, 'uploads/');
+    callback(null, 'postassets/');
   },
   filename: function (req, file, cb) {
     var datetimestamp = Date.now();

@@ -151,7 +151,7 @@ exports.upload = async (ctx) => {
     'success': 1,
     'file': {
       // url
-      'url': `http://${ctx.request.headers.host}/uploads/${ctx.request.file.filename}`
+      'url': `http://${ctx.request.headers.host}/postassets/${ctx.request.file.filename}`
     }
   }
 }
