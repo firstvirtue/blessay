@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     callback(null, file.originalname);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 const printInfo = (ctx) => {
   ctx.body = {
