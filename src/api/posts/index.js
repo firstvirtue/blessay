@@ -8,7 +8,7 @@ const posts = new Router();
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
 
-    callback(null, 'postassets/');
+    callback(null, 'post-rsc-pool/');
   },
   filename: function (req, file, cb) {
     var datetimestamp = Date.now();
@@ -44,6 +44,6 @@ posts.patch('/:id', postsCtrl.update);
 // posts.put('/:id', postsCtrl.replace);
 posts.delete('/:id', postsCtrl.delete);
 
-posts.post('/upload', upload.single('postassets'), postsCtrl.upload);
+posts.post('/upload', upload.single('post-rsc-pool'), postsCtrl.upload);
 
 module.exports = posts;

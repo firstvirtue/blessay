@@ -3,7 +3,8 @@ tmp
 
 src/_.sql
 src/knexfile.js
-postassets/
+post-rsc-pool/
+profilepic/
 rsc/
 
 # dotenv

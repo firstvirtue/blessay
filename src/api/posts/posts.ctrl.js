@@ -81,8 +81,6 @@ exports.write = async (ctx) => {
     //   // console.log(item);
     // });
 
-    // throw new Exception();
-
     await trx.commit();
   } catch (err) {
     console.log(`catch: ${err}`);
@@ -151,7 +149,7 @@ exports.upload = async (ctx) => {
     'success': 1,
     'file': {
       // url
-      'url': `http://${ctx.request.headers.host}/postassets/${ctx.request.file.filename}`
+      'url': `http://${ctx.request.headers.host}/post-rsc-pool/${ctx.request.file.filename}`
     }
   }
 }
