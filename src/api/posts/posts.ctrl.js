@@ -50,10 +50,12 @@ exports.write = async (ctx) => {
       title: data.title,
       writer: data.writer,
       description: data.description,
+      thumbnail: data.thumbnail,
+      published: data.published,
       created_on: new Date().toISOString(),
       updated_on: new Date().toISOString(),
       blocks: data.blocks
-    })
+    });
 
     //article.id
 
@@ -109,6 +111,8 @@ exports.update = async (ctx) => {
       title: data.title,
       writer: data.writer,
       description: data.description,
+      thumbnail: data.thumbnail,
+      published: data.published,
       created_on: new Date().toISOString(),
       updated_on: new Date().toISOString(),
       blocks: data.blocks
