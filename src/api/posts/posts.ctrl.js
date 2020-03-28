@@ -5,7 +5,7 @@ const fs = require('fs');
 
 exports.list = async (ctx) => {
 
-  const res = await Article.query().select('*');
+  const res = await Article.query().select('*').orderBy('created_on');
 
   console.log(res);
 
@@ -30,7 +30,8 @@ exports.readUserArticles = async (ctx) => {
   const res = await Article.query()
     // .eager('blocks')
     .select('*')
-    .where('writer', username);
+    .where('writer', username)
+    .orderBy('created_on');
 
   ctx.body = res;
 }

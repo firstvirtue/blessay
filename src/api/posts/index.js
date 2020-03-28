@@ -38,6 +38,7 @@ const printInfo = (ctx) => {
 posts.get('/', postsCtrl.list);
 posts.get('/:id', postsCtrl.read);
 posts.get('/user/:user', postsCtrl.readUserArticles);
+
 posts.post('/', postsCtrl.write);
 posts.patch('/:id', postsCtrl.update);
 
