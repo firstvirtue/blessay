@@ -52,37 +52,12 @@ exports.write = async (ctx) => {
       writer: data.writer,
       description: data.description,
       thumbnail: data.thumbnail,
+      category: data.category,
       published: data.published,
       created_on: new Date().toISOString(),
       updated_on: new Date().toISOString(),
       blocks: data.blocks
     });
-
-    //article.id
-
-    // article.blocks.forEach(item => {
-    //   if(item.type === 'image') {
-    //     // await FileManager.translateResource(ctx.request.headers.host, article.id, item.content);
-
-
-    //     const regex = /uploads/gi;
-    //     const newPath = `rsc/${article.id}`;
-
-    //     const filePath = item.content.replace(/http:\/\/192.168.0.14:4000/gi, '');
-
-    //     console.log('=======');
-    //     console.log(filePath);
-    //     console.log('=======');
-
-    //     // FileManager.moveFile(filePath, `rsc/${article.id}`);
-
-    //     // const b = await Block.query().update({
-    //     //   content: newPath
-    //     // })
-    //     // .where('id', item.id);
-    //   }
-    //   // console.log(item);
-    // });
 
     await trx.commit();
   } catch (err) {
@@ -113,6 +88,7 @@ exports.update = async (ctx) => {
       writer: data.writer,
       description: data.description,
       thumbnail: data.thumbnail,
+      category: data.category,
       published: data.published,
       created_on: new Date().toISOString(),
       updated_on: new Date().toISOString(),
