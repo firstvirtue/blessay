@@ -12,6 +12,12 @@ exports.list = async (ctx) => {
   ctx.body = res;
 }
 
+exports.listByCategory = async (ctx) => {
+  const categoryId = ctx.params.categoryId;
+  const res = await Article.query().select('*').where('category', categoryId).orderBy('created_on');
+  ctx.body = res;
+}
+
 exports.read = async (ctx) => {
 
   const id = ctx.params.id;
