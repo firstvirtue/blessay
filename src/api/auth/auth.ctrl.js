@@ -5,12 +5,12 @@ exports.localRegister = async (ctx) => {
 
   const schema = Joi.object().keys({
     id: Joi.string().alphanum().min(4).max(15).required(),
-    username: Joi.string().alphanum().min(4).max(15).required(),
+    username: Joi.string().min(2).max(8).required(),
     password: Joi.string().required().min(6)
   });
 
   const result = Joi.validate(ctx.request.body, schema);
-
+  console.log(result);
   if(result.error) {
     ctx.status = 400;
     return;
@@ -25,9 +25,11 @@ exports.localRegister = async (ctx) => {
   const newAccount = {
     id: id,
     username: username,
-    password: password, // TODO: hash
+    password: Account.hash(password), // TODO: hash
     created_on: new Date().toISOString()
   }
+
+  console.log(newAccount);
 
   let used = null;
   try {
@@ -72,12 +74,12 @@ exports.localLogin = async (ctx) => {
 
   let account = null;
   try {
-    account = await Account.query().select('username', 'email', 'password', 'created_on').where('username', '=', username).first();
+    account = await Account.query().select('id', 'email', 'password', 'username', 'created_on').where('id', '=', username).first();
   } catch (e) {
     ctx.throw(500, e);
   }
 
-  if(account.password !== password) {
+  if(account === undefined || !account.validate(password)) {
     ctx.status = 403;
     return;
   }

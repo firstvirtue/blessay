@@ -1,9 +1,22 @@
 const { Model } = require('objection');
 const { generateToken } = require('../lib/token');
+const crypto = require('crypto');
+
+// function hash(password) {
+//   return crypto.createHmac('sha256', process.env.SECRET_KEY).update(password).digest('hex');
+// }
 
 class Account extends Model {
   static get tableName() {
     return 'account';
+  }
+
+  static hash(password) {
+    return crypto.createHmac('sha256', process.env.SECRET_KEY).update(password).digest('hex');
+  }
+
+  validate(password) {
+    return this.password === Account.hash(password);
   }
 
   generateToken() {
