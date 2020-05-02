@@ -104,8 +104,8 @@ exports.exists = async (ctx) => {
 
   try {
     account = await (key === 'email' ?
-      Account.query().select('username').where('email', '=', value).first() :
-      Account.query().select('username').where('username', '=', value).first())
+      Account.query().select('id').where('email', '=', value).first() :
+      Account.query().select('id').where('id', '=', value).first())
   } catch (e) {
     ctx.throw(500, e);
   }
