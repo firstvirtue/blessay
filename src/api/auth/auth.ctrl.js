@@ -4,8 +4,8 @@ const Account = require('../../model/account');
 exports.localRegister = async (ctx) => {
 
   const schema = Joi.object().keys({
+    id: Joi.string().alphanum().min(4).max(15).required(),
     username: Joi.string().alphanum().min(4).max(15).required(),
-    email: Joi.string().email().required(),
     password: Joi.string().required().min(6)
   });
 
@@ -17,13 +17,13 @@ exports.localRegister = async (ctx) => {
   }
 
   const {
-    email,
+    id,
     username,
     password
   } = ctx.request.body;
 
   const newAccount = {
-    email: email,
+    id: id,
     username: username,
     password: password, // TODO: hash
     created_on: new Date().toISOString()
@@ -31,7 +31,7 @@ exports.localRegister = async (ctx) => {
 
   let used = null;
   try {
-    used = await Account.query().select('email', 'password').where('email', '=', newAccount.email);
+    used = await Account.query().select('id', 'password').where('id', '=', newAccount.id);
   } catch (e) {
     ctx.throw(500, e);
   }
