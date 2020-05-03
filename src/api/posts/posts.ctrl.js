@@ -5,7 +5,9 @@ const fs = require('fs');
 
 exports.list = async (ctx) => {
 
-  const res = await Article.query().select('*').orderBy('created_on');
+  const res = await Article.query().select('*')
+    .andWhere('published', 1)
+    .orderBy('created_on');
 
   console.log(res);
 
@@ -14,7 +16,10 @@ exports.list = async (ctx) => {
 
 exports.listByCategory = async (ctx) => {
   const categoryId = ctx.params.categoryId;
-  const res = await Article.query().select('*').where('category', categoryId).orderBy('created_on');
+  const res = await Article.query().select('*')
+    .where('category', categoryId)
+    .andWhere('published', 1)
+    .orderBy('created_on');
   ctx.body = res;
 }
 

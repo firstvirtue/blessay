@@ -10,7 +10,6 @@ exports.localRegister = async (ctx) => {
   });
 
   const result = Joi.validate(ctx.request.body, schema);
-  console.log(result);
   if(result.error) {
     ctx.status = 400;
     return;
@@ -28,8 +27,6 @@ exports.localRegister = async (ctx) => {
     password: Account.hash(password), // TODO: hash
     created_on: new Date().toISOString()
   }
-
-  console.log(newAccount);
 
   let used = null;
   try {
