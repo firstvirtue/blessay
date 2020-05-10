@@ -2,7 +2,6 @@ const Joi = require('joi');
 const Account = require('../../model/account');
 
 exports.localRegister = async (ctx) => {
-
   const schema = Joi.object().keys({
     id: Joi.string().alphanum().min(4).max(15).required(),
     username: Joi.string().min(2).max(8).required(),
