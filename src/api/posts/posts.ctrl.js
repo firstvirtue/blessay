@@ -4,10 +4,26 @@ const FileManager = require('../../lib/fileManager');
 const fs = require('fs');
 
 exports.list = async (ctx) => {
+  let page = 0,
+    pageSize = 10;
+
+  const {
+    index,
+    size
+  } = ctx.request.query;
+
+  if(index) {
+    page = index;
+  }
+
+  if(size) {
+    pageSize = size;
+  }
 
   const res = await Article.query().select('*')
     .andWhere('published', 1)
-    .orderBy('created_on');
+    .orderBy('created_on')
+    .page(page, pageSize);
 
   console.log(res);
 

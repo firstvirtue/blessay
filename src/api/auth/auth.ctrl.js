@@ -88,8 +88,6 @@ exports.localLogin = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  console.log(account);
-
   ctx.cookies.set('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
   delete account.password;
   ctx.body = account;
@@ -134,7 +132,6 @@ exports.logout = async (ctx) => {
 
 exports.user = (ctx) => {
   const { user } = ctx.request;
-  // console.log(user);
 
   if(!user) {
     ctx.status = 403; // forbidden
@@ -195,8 +192,6 @@ exports.localRegisterEmail = async (ctx) => {
   } catch (e) {
     ctx.throw(500, e);
   }
-
-  console.log('', account);
 
   ctx.body = account;
 }
