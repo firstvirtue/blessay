@@ -52,12 +52,12 @@ exports.read = async (ctx) => {
 }
 
 exports.readUserArticles = async (ctx) => {
-  const username = ctx.params.user;
+  const userId = ctx.params.user;
 
   const res = await Article.query()
     // .eager('blocks')
     .select('*')
-    .where('writer', username)
+    .where('writer', userId)
     .orderBy('created_on');
 
   ctx.body = res;
@@ -68,7 +68,7 @@ exports.write = async (ctx) => {
 
   const data = ctx.request.body;
 
-  data.writer = user.profile.username;
+  data.writer = user.profile.id;
 
   const trx = await Article.startTransaction();
 
