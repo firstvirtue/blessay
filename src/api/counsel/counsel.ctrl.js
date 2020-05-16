@@ -24,7 +24,7 @@ exports.register = async (ctx) => {
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: process.env.COUNSELOR,
-      subject: '상담 신청',
+      subject: `상담 신청 - ${counsel.username}`,
       html: `
       <h1>상담 내용</h1>
       <p>${counsel.contents}</p>

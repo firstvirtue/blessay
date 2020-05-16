@@ -23,6 +23,7 @@ class Account extends Model {
     const payload = {
       _id: this.$id,
       profile: {
+        id: this.id,
         username: this.username, // TODO: profile
         email: this.email
       }

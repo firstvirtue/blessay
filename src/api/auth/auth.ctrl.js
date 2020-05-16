@@ -23,7 +23,7 @@ exports.localRegister = async (ctx) => {
   const newAccount = {
     id: id,
     username: username,
-    password: Account.hash(password), // TODO: hash
+    password: Account.hash(password),
     created_on: new Date().toISOString()
   }
 
@@ -49,6 +49,7 @@ exports.localRegister = async (ctx) => {
     ctx.throw(500, e);
   }
 
+  delete account.password;
   ctx.body = account;
 }
 
@@ -119,17 +120,17 @@ exports.logout = async (ctx) => {
   ctx.status = 204;
 }
 
-exports.check = (ctx) => {
-  const { user } = ctx.request;
-  // console.log(user);
+// exports.check = (ctx) => {
+//   const { user } = ctx.request;
+//   // console.log(user);
 
-  if(!user) {
-    ctx.status = 403; // forbidden
-    return;
-  }
+//   if(!user) {
+//     ctx.status = 403; // forbidden
+//     return;
+//   }
 
-  ctx.body = user;
-}
+//   ctx.body = user;
+// }
 
 exports.user = (ctx) => {
   const { user } = ctx.request;
@@ -141,4 +142,61 @@ exports.user = (ctx) => {
   }
 
   ctx.body = user;
+}
+
+exports.localRegisterPassword = async (ctx) => {
+  const { user } = ctx.request;
+
+  const schema = Joi.object().keys({
+    password: Joi.string().required().min(6)
+  });
+
+  const result = Joi.validate(ctx.request.body, schema);
+  if(result.error) {
+    ctx.status = 400;
+    return;
+  }
+
+  const {
+    password
+  } = ctx.request.body;
+
+  try {
+    account = await Account.query().update({ password: Account.hash(password) }).where('id', '=', user.profile.id);
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  ctx.body = 200;
+}
+
+exports.localRegisterEmail = async (ctx) => {
+  const { user } = ctx.request;
+
+  const schema = Joi.object().keys({
+    email: Joi.string().required().min(6)
+  });
+
+  const result = Joi.validate(ctx.request.body, schema);
+  if(result.error) {
+    ctx.status = 400;
+    return;
+  }
+
+  const {
+    email
+  } = ctx.request.body;
+
+  let account;
+
+  try {
+    account = Account.query().select('id', 'email', 'password', 'username', 'created_on').where('id', '=', user.profile.id)
+    account.update({ email: email });
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  console.log('', account);
+
+  ctx.body = account;
 }
