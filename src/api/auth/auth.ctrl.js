@@ -130,13 +130,33 @@ exports.logout = async (ctx) => {
 //   ctx.body = user;
 // }
 
-exports.user = (ctx) => {
+exports.user = async (ctx) => {
   const { user } = ctx.request;
+
+  console.log('fetch:', user);
 
   if(!user) {
     ctx.status = 403; // forbidden
     return;
   }
+
+  // let account = null;
+  // try {
+  //   account = await Account.query().select('id', 'email', 'username', 'created_on').where('id', '=', user.profile.id).first();
+  // } catch (e) {
+  //   ctx.throw(500, e);
+  // }
+
+  // let token = null;
+  // try {
+  //   token = await account.generateToken();
+  // } catch (e) {
+  //   ctx.throw(500, e);
+  // }
+
+  // ctx.cookies.set('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
+  // delete account.password;
+  // ctx.body = account;
 
   ctx.body = user;
 }
@@ -187,8 +207,7 @@ exports.localRegisterEmail = async (ctx) => {
   let account;
 
   try {
-    account = Account.query().select('id', 'email', 'password', 'username', 'created_on').where('id', '=', user.profile.id)
-    account.update({ email: email });
+    account = await Account.query().update({ email: email }).where('id', '=', user.profile.id);
   } catch (e) {
     ctx.throw(500, e);
   }
