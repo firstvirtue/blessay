@@ -20,6 +20,7 @@ exports.register = async (ctx) => {
   });
 
   try {
+    const attendance = counsel.isAttendance ? '출석하고 있음' : counsel.nonattendancePeriodLabel[counsel.nonattendancePeriodLevel];
 
     const mailOptions = {
       from: process.env.GMAIL_USER,
@@ -28,10 +29,14 @@ exports.register = async (ctx) => {
       html: `
       <h1>상담 내용</h1>
       <p>${counsel.contents}</p>
-      <h2>이름</h2>
+      <h3>이름</h3>
       <p>${counsel.username}</p>
-      <h2>연락처</h2>
+      <h3>연락처</h3>
       <p>${counsel.contact}</p>
+      <h3>신앙 경험</h3>
+      <p>${counsel.experienceLabel[counsel.experienceLevel]}</p>
+      <h3>출석 여부</h3>
+      <p>${attendance}</p>
       `
     }
 
