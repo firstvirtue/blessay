@@ -140,23 +140,14 @@ exports.user = async (ctx) => {
     return;
   }
 
-  // let account = null;
-  // try {
-  //   account = await Account.query().select('id', 'email', 'username', 'created_on').where('id', '=', user.profile.id).first();
-  // } catch (e) {
-  //   ctx.throw(500, e);
-  // }
+  let account = null;
+  try {
+    account = await Account.query().select('id', 'email', 'username', 'created_on').where('id', '=', user.profile.id).first();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
 
-  // let token = null;
-  // try {
-  //   token = await account.generateToken();
-  // } catch (e) {
-  //   ctx.throw(500, e);
-  // }
-
-  // ctx.cookies.set('access_token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
-  // delete account.password;
-  // ctx.body = account;
+  user.profile.email = account.email;
 
   ctx.body = user;
 }
