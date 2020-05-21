@@ -13,7 +13,7 @@ const { jwtMiddleware } = require('./lib/token');
 const api = require('./api');
 
 // Initialize knex.
-const knex = Knex(knexConfig.development);
+const knex = process.env.NODE_ENV === 'production' ? Knex(knexConfig.production) : Knex(knexConfig.development);
 Model.knex(knex);
 
 const app = new Koa();
