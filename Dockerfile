@@ -11,6 +11,8 @@ COPY package*.json ./
 
 RUN npm install
 
+RUN mkdir post-rsc-pool
+
 COPY . .
 
 EXPOSE 4000
