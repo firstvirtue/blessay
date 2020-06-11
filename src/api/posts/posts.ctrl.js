@@ -2,6 +2,7 @@ const Article = require('../../model/article');
 const Block = require('../../model/block');
 const FileManager = require('../../lib/fileManager');
 const fs = require('fs');
+const { transaction } = require('objection');
 
 exports.list = async (ctx) => {
   let page = 0,
@@ -70,26 +71,25 @@ exports.write = async (ctx) => {
 
   data.writer = user.profile.id;
 
-  const trx = await Article.startTransaction();
-
   let article;
   try {
-    article = await Article.query().insertGraph({
-      title: data.title,
-      writer: data.writer,
-      description: data.description,
-      thumbnail: data.thumbnail,
-      category: data.category,
-      published: data.published,
-      created_on: new Date().toISOString(),
-      updated_on: new Date().toISOString(),
-      blocks: data.blocks
+
+    article = await transaction(Article, async (Article) => {
+      return await Article.query().insertGraph({
+        title: data.title,
+        writer: data.writer,
+        description: data.description,
+        thumbnail: data.thumbnail,
+        category: data.category,
+        published: data.published,
+        created_on: new Date().toISOString(),
+        updated_on: new Date().toISOString(),
+        blocks: data.blocks
+      });
     });
 
-    await trx.commit();
   } catch (err) {
     console.log(`catch: ${err}`);
-    await trx.rollback();
     throw err;
   }
 
@@ -105,27 +105,27 @@ exports.update = async (ctx) => {
 
   const data = ctx.request.body;
 
-  const trx = await Article.startTransaction();
+
   let article;
 
   try {
-    article = await Article.query().upsertGraph({
-      id: id,
-      title: data.title,
-      writer: data.writer,
-      description: data.description,
-      thumbnail: data.thumbnail,
-      category: data.category,
-      published: data.published,
-      created_on: new Date().toISOString(),
-      updated_on: new Date().toISOString(),
-      blocks: data.blocks
-    })
+    article = await transaction(Article, async (Article) => {
+      return await Article.query().upsertGraph({
+        id: id,
+        title: data.title,
+        writer: data.writer,
+        description: data.description,
+        thumbnail: data.thumbnail,
+        category: data.category,
+        published: data.published,
+        created_on: new Date().toISOString(),
+        updated_on: new Date().toISOString(),
+        blocks: data.blocks
+      });
+    });
 
-    await trx.commit();
   } catch (err) {
     console.log(err);
-    await trx.rollback();
     throw err;
   }
 
