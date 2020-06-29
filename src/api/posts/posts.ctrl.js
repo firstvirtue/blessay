@@ -72,6 +72,7 @@ exports.write = async (ctx) => {
   data.writer = user.profile.id;
 
   let article;
+  // console.log(data);
   try {
 
     article = await transaction(Article, async (Article) => {
@@ -118,7 +119,6 @@ exports.update = async (ctx) => {
         thumbnail: data.thumbnail,
         category: data.category,
         published: data.published,
-        created_on: new Date().toISOString(),
         updated_on: new Date().toISOString(),
         blocks: data.blocks
       });
