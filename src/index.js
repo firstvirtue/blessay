@@ -1,5 +1,7 @@
 require('dotenv').config();
 const Koa = require('koa');
+const http = require('http');
+const https = require('https');
 const Router = require('koa-router');
 const serve = require('koa2-static-middleware');
 const bodyParser = require('koa-bodyparser');
@@ -30,6 +32,9 @@ router.get('/rsc/*', serve(__dirname + '/../rsc'));
 
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(4000, () => {
-  console.log('listening to port 4000');
-});
+// app.listen(4000, () => {
+//   console.log('listening to port 4000');
+// });
+
+http.createServer(app.callback()).listen(4000);
+https.createServer(app.callback()).listen(4001);
