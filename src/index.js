@@ -43,8 +43,8 @@ try {
   const option =
     process.env.NODE_ENV === 'production'
       ? {
-        key: fs.readFileSync(path.resolve(__dirname, '../cert/privkey.pem')),
-        cert: fs.readFileSync(path.resolve(__dirname, '../cert/fullchain.pem'))
+        key: fs.readFileSync(path.resolve(process.cwd(), 'cert/privkey.pem')),
+        cert: fs.readFileSync(path.resolve(process.cwd(), 'cert/fullchain.pem'))
       }
       :
     undefined;
