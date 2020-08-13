@@ -6,6 +6,7 @@ const Router = require('koa-router');
 const serve = require('koa2-static-middleware');
 const bodyParser = require('koa-bodyparser');
 const fs = require('fs');
+const path = require('path');
 const cors = require('koa2-cors');
 const Knex = require('knex');
 const { Model, ForeignKeyViolationError, ValidationError } = require('objection');
@@ -41,8 +42,8 @@ app.use(router.routes()).use(router.allowedMethods());
 const option =
 process.env.NODE_ENV === 'production'
   ? {
-    key: fs.readFileSync(serve(__dirname + '/../cert/privkey.pem')),
-    cert: fs.readFileSync(serve(__dirname + '/../cert/fullchain.pem'))
+    key: fs.readFileSync(path.resolve(__dirname, '../cert/privkey.pem')),
+    cert: fs.readFileSync(path.resolve(__dirname, '../cert/fullchain.pem'))
   } :
   undefined;
 
