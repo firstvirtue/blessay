@@ -39,18 +39,23 @@ app.use(router.routes()).use(router.allowedMethods());
 //   console.log('listening to port 4000');
 // });
 
-const option =
-process.env.NODE_ENV === 'production'
-  ? {
-    key: fs.readFileSync(path.resolve(__dirname, '../cert/privkey.pem')),
-    cert: fs.readFileSync(path.resolve(__dirname, '../cert/fullchain.pem'))
-  } :
-  undefined;
+try {
+  const option =
+    process.env.NODE_ENV === 'production'
+      ? {
+        key: fs.readFileSync(path.resolve(__dirname, '../cert/privkey.pem')),
+        cert: fs.readFileSync(path.resolve(__dirname, '../cert/fullchain.pem'))
+      }
+      :
+    undefined;
+
+  if(option) {
+    https.createServer(option, app).listen(PORT, () => {
+      console.log(`Server is running at port ${PORT}`)
+    });
+  }
+} catch (error) {
+  console.log(error);
+}
 
 http.createServer(app.callback()).listen(4000);
-
-if(option) {
-  https.createServer(option, app).listen(PORT, () => {
-    console.log(`Server is running at port ${PORT}`)
-  });
-}
