@@ -50,7 +50,7 @@ try {
     undefined;
 
   if(option) {
-    https.createServer(option, app).listen(PORT, () => {
+    https.createServer(option, app.callback()).listen(PORT, () => {
       console.log(`Server is running at port ${PORT}`)
     });
   }
