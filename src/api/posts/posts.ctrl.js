@@ -23,10 +23,10 @@ exports.list = async (ctx) => {
 
   const res = await Article.query().select('*')
     .andWhere('published', 1)
-    .orderBy('created_on')
+    .orderBy('created_on', 'DESC')
     .page(page, pageSize);
 
-  console.log(res);
+  // console.log(res);
 
   ctx.body = res;
 }
@@ -36,7 +36,7 @@ exports.listByCategory = async (ctx) => {
   const res = await Article.query().select('*')
     .where('category', categoryId)
     .andWhere('published', 1)
-    .orderBy('created_on');
+    .orderBy('created_on', 'DESC');
   ctx.body = res;
 }
 
@@ -59,7 +59,7 @@ exports.readUserArticles = async (ctx) => {
     // .eager('blocks')
     .select('*')
     .where('writer', userId)
-    .orderBy('created_on');
+    .orderBy('created_on', 'DESC');
 
   ctx.body = res;
 }
