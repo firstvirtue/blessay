@@ -1,7 +1,7 @@
 node_modules
 tmp
 
-src/_.sql
+# src/_.sql
 src/knexfile.js
 post-rsc-pool/
 profilepic/
