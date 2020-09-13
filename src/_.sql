@@ -43,6 +43,15 @@ CREATE TABLE category(
   content VARCHAR (500) NOT NULL
 );
 
+DROP TABLE IF EXISTS tag;
+CREATE TABLE tag(
+  id serial PRIMARY KEY,
+  tagname VARCHAR(100) NOT NULL,
+  domain VARCHAR(100) NOT NULL,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP NOT NULL
+);
+
 -- milestone 2
 -- group -- group - category
 -- role
