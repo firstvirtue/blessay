@@ -37,12 +37,16 @@ CREATE TABLE article_block(
 );
 
 -- category
-DROP TABLE IF EXISTS category;
-CREATE TABLE category(
+DROP TABLE IF EXISTS article_tag;
+CREATE TABLE article_tag(
   id serial PRIMARY KEY,
-  content VARCHAR (500) NOT NULL
+  article_id serial NOT NULL,
+  tag_id serial NOT NULL,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP NOT NULL
 );
 
+-- tag
 DROP TABLE IF EXISTS tag;
 CREATE TABLE tag(
   id serial PRIMARY KEY,
