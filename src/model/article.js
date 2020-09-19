@@ -1,5 +1,4 @@
 const { Model } = require('objection');
-const Block = require('./block');
 
 class Article extends Model {
   static get tableName() {
@@ -8,6 +7,7 @@ class Article extends Model {
 
   static get relationMappings() {
     const Block = require('./block');
+    const ArticleTag = require('./article-tag');
 
     return {
       blocks: {
@@ -17,12 +17,21 @@ class Article extends Model {
           from: 'article.id',
           to: 'article_block.article_id'
         }
+      },
+      tags: {
+        relation: Model.HasManyRelation,
+        modelClass: ArticleTag,
+        join: {
+          from: 'article.id',
+          to: 'article_tag.article_id'
+        }
       }
     }
   }
 
   static async beforeDelete({ asFindQuery, transaction }) {
     await Block.query(transaction).delete().whereIn('article_id', asFindQuery().select('id'));
+    await ArticleTag.query(transaction).delete().whereIn('article_id', asFindQuery().select('id'));
   }
 }
 

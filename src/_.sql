@@ -36,7 +36,7 @@ CREATE TABLE article_block(
   -- tag array?
 );
 
--- category
+-- article tag(category)
 DROP TABLE IF EXISTS article_tag;
 CREATE TABLE article_tag(
   id serial PRIMARY KEY,

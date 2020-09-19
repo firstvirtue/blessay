@@ -72,7 +72,7 @@ exports.write = async (ctx) => {
   data.writer = user.profile.id;
 
   let article;
-  // console.log(data);
+
   try {
 
     article = await transaction(Article, async (Article) => {
@@ -85,7 +85,7 @@ exports.write = async (ctx) => {
         published: data.published,
         created_on: new Date().toISOString(),
         updated_on: new Date().toISOString(),
-        blocks: data.blocks
+        blocks: data.blocks,
       });
     });
 
@@ -105,7 +105,7 @@ exports.update = async (ctx) => {
   } = ctx.params;
 
   const data = ctx.request.body;
-
+  console.log(data.tags);
 
   let article;
 
@@ -120,7 +120,15 @@ exports.update = async (ctx) => {
         category: data.category,
         published: data.published,
         updated_on: new Date().toISOString(),
-        blocks: data.blocks
+        blocks: data.blocks,
+        tags: data.tags && data.tags.map(tag => {
+          delete tag.tagname;
+          delete tag.domain;
+          tag.tag_id = tag.id;
+          delete tag.id;
+          // delete tag.isActive;
+          return tag;
+        }),
       });
     });
 
