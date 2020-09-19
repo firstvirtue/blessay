@@ -2,8 +2,6 @@ const Tag = require('../../model/tag');
 const { transaction } = require('objection');
 
 exports.list = async (ctx) => {
-  let page = 0,
-    pageSize = 10;
 
   const {
     domain
@@ -21,6 +19,8 @@ exports.write = async (ctx) => {
 
   let tag;
   try {
+
+    // await new Promise(resolve => setTimeout(resolve, 1000));
 
     tag = await transaction(Tag, async (Tag) => {
       return await Tag.query().insert({
