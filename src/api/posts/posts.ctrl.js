@@ -24,7 +24,8 @@ exports.list = async (ctx) => {
   const res = await Article.query().select('*')
     .andWhere('published', 1)
     .orderBy('created_on', 'DESC')
-    .page(page, pageSize);
+    .page(page, pageSize)
+    .withGraphFetched('[tags(withMeta)]');;
 
   // console.log(res);
 
@@ -120,8 +121,7 @@ exports.update = async (ctx) => {
         updated_on: new Date().toISOString(),
         blocks: data.blocks,
         tags: data.tags && data.tags.map(tag => {
-          tag.tag_id = tag.id;
-          delete tag.id;
+          delete tag.tagname;
           return tag;
         }),
       });

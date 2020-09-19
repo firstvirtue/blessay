@@ -23,7 +23,7 @@ class ArticleTag extends Model {
   static get modifiers() {
     return {
       withMeta(builder, gender) {
-        builder.select('article_tag.id', 'tag_id', 'article_id', 'tagname')
+        builder.select('article_tag.id', 'tag_id', 'article_id', 'tagname', 'article_tag.created_on', 'article_tag.updated_on')
         .joinRelated('tag');
       },
     }
