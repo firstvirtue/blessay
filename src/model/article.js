@@ -25,7 +25,7 @@ class Article extends Model {
           from: 'article.id',
           to: 'article_tag.article_id'
         }
-      }
+      },
     }
   }
 

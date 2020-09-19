@@ -5,30 +5,29 @@ class ArticleTag extends Model {
     return 'article_tag';
   }
 
-  // static get relationMappings() {
-  //   // const Tag = require('./tag');
-  //   // const Article = require('./article');
+  static get relationMappings() {
+    const Tag = require('./tag');
 
-  //   return {
-  //     // tag: {
-  //     //   relation: Model.BelongsToOneRelation,
-  //     //   modelClass: Tag,
-  //     //   join: {
-  //     //     from: 'article_tag.tag_id',
-  //     //     to: 'tag.id'
-  //     //   }
-  //     // },
-  //     // article: {
-  //     //   relation: Model.BelongsToOneRelation,
-  //     //   modelClass: Article,
-  //     //   join: {
-  //     //     from: 'article_tag.article_id',
-  //     //     to: 'article.id'
-  //     //   }
-  //     // }
-  //   }
+    return {
+      tag: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Tag,
+        join: {
+          from: 'article_tag.tag_id',
+          to: 'tag.id'
+        }
+      },
+    }
+  }
 
-  // }
+  static get modifiers() {
+    return {
+      withMeta(builder, gender) {
+        builder.select('article_tag.id', 'tag_id', 'article_id', 'tagname')
+        .joinRelated('tag');
+      },
+    }
+  }
 
 }
 

@@ -45,9 +45,9 @@ exports.read = async (ctx) => {
   const id = ctx.params.id;
 
   const res = await Article.query()
-    .eager('blocks')
     .where('id', id)
-    .first();
+    .first()
+    .withGraphFetched('[blocks, tags(withMeta)]');
 
   ctx.body = res;
 }
@@ -94,8 +94,6 @@ exports.write = async (ctx) => {
     throw err;
   }
 
-  // console.log(article);
-
   ctx.body = article;
 }
 
@@ -122,11 +120,8 @@ exports.update = async (ctx) => {
         updated_on: new Date().toISOString(),
         blocks: data.blocks,
         tags: data.tags && data.tags.map(tag => {
-          delete tag.tagname;
-          delete tag.domain;
           tag.tag_id = tag.id;
           delete tag.id;
-          // delete tag.isActive;
           return tag;
         }),
       });
