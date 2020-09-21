@@ -25,9 +25,7 @@ exports.list = async (ctx) => {
     .andWhere('published', 1)
     .orderBy('created_on', 'DESC')
     .page(page, pageSize)
-    .withGraphFetched('[tags(withMeta)]');;
-
-  // console.log(res);
+    .withGraphFetched('[tags(withMeta)]');
 
   ctx.body = res;
 }
@@ -53,14 +51,15 @@ exports.read = async (ctx) => {
   ctx.body = res;
 }
 
-exports.readUserArticles = async (ctx) => {
+exports.listByUser = async (ctx) => {
   const userId = ctx.params.user;
 
   const res = await Article.query()
     // .eager('blocks')
     .select('*')
     .where('writer', userId)
-    .orderBy('created_on', 'DESC');
+    .orderBy('created_on', 'DESC')
+    .withGraphFetched('[blocks, tags(withMeta)]');
 
   ctx.body = res;
 }
