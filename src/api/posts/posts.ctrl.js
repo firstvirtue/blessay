@@ -10,7 +10,8 @@ exports.list = async (ctx) => {
 
   const {
     index,
-    size
+    size,
+    tags
   } = ctx.request.query;
 
   if(index) {
@@ -21,17 +22,49 @@ exports.list = async (ctx) => {
     pageSize = size;
   }
 
-  const res = await Article.query().select('*')
+  let articles;
+  if(tags) {
+    articles = await getByTags(page, pageSize, tags);
+  } else {
+    articles = await getAll(page, pageSize);
+  }
+
+  ctx.body = articles;
+}
+
+async function getAll(page, pageSize) {
+  return await Article.query()
+    .select([
+      'article.*',
+    ])
     .andWhere('published', 1)
     .orderBy('created_on', 'DESC')
     .page(page, pageSize)
     .withGraphFetched('[tags(withMeta)]');
-
-  ctx.body = res;
 }
 
-exports.listByCategory = async (ctx) => {
+async function getByTags(page, pageSize, tags) {
+
+  const tagsArray = tags.split(',').map(tagId => Number(tagId));
+
+  return await Article.query()
+  .select([
+    'article.*',
+  ])
+  .joinRelated('tags')
+  .whereIn('tag_id', tagsArray)
+  .andWhere('published', 1)
+  .orderBy('created_on', 'DESC')
+  .page(page, pageSize)
+  .withGraphFetched('[tags(withMeta)]')
+  .distinct('article.id');
+}
+
+exports.listByTags = async (ctx) => {
   const categoryId = ctx.params.categoryId;
+
+  console.log(categoryId);
+
   const res = await Article.query().select('*')
     .where('category', categoryId)
     .andWhere('published', 1)

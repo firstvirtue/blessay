@@ -36,10 +36,10 @@ const printInfo = (ctx) => {
 };
 
 posts.get('/', postsCtrl.list);
-posts.get('/:categoryId', postsCtrl.listByCategory);
 posts.get('/user/:user', postsCtrl.listByUser);
 posts.get('/read/:id', postsCtrl.read);
-// posts.get('/:category', postsCtrl.listByCategory);
+// posts.get('/:tags', postsCtrl.listByTags);
+posts.get('/:tags', postsCtrl.listByTags);
 // [TODO] 카테고리로 가져오기를 태그로 가져오기로 수정
 
 posts.post('/', postsCtrl.write);
