@@ -30,6 +30,9 @@ class Article extends Model {
   }
 
   static async beforeDelete({ asFindQuery, transaction }) {
+    const Block = require('./block');
+    const ArticleTag = require('./article-tag');
+
     await Block.query(transaction).delete().whereIn('article_id', asFindQuery().select('id'));
     await ArticleTag.query(transaction).delete().whereIn('article_id', asFindQuery().select('id'));
   }
