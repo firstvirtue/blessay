@@ -18,6 +18,7 @@ CREATE TABLE article(
   thumbnail VARCHAR (200),
   description VARCHAR (400),
   category VARCHAR,
+  domain VARCHAR(100) NOT NULL,
   published BOOLEAN NOT NULL,
   created_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP NOT NULL

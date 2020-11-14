@@ -60,16 +60,48 @@ async function getByTags(page, pageSize, tags) {
   .distinct('article.id');
 }
 
-exports.listByTags = async (ctx) => {
-  const categoryId = ctx.params.categoryId;
+exports.listByDomain = async (ctx) => {
+  const domain = ctx.params.domain;
 
-  console.log(categoryId);
+  let page = 0,
+    pageSize = 10;
 
-  const res = await Article.query().select('*')
-    .where('category', categoryId)
+  const {
+    index,
+    size,
+    tags
+  } = ctx.request.query;
+
+  if(index) {
+    page = index;
+  }
+
+  if(size) {
+    pageSize = size;
+  }
+
+  let query = Article.query()
+    .select([
+      'article.*',
+    ])
+    .joinRelated('tags')
     .andWhere('published', 1)
-    .orderBy('created_on', 'DESC');
-  ctx.body = res;
+    .orderBy('created_on', 'DESC')
+    .page(page, pageSize)
+    .withGraphFetched('[tags(withMeta)]')
+    .distinct('article.id');
+
+  query.where('domain', domain);
+
+  if(tags) {
+    const tagsArray = tags.split(',').map(tagId => Number(tagId));
+    query.whereIn('tag_id', tagsArray)
+  }
+
+  await query.then(function(res) {
+    console.log(res);
+    ctx.body = res;
+  });
 }
 
 exports.read = async (ctx) => {

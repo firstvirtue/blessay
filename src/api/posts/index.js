@@ -36,15 +36,12 @@ const printInfo = (ctx) => {
 };
 
 posts.get('/', postsCtrl.list);
+posts.get('/:domain', postsCtrl.listByDomain);
 posts.get('/user/:user', postsCtrl.listByUser);
 posts.get('/read/:id', postsCtrl.read);
-// posts.get('/:tags', postsCtrl.listByTags);
-posts.get('/:tags', postsCtrl.listByTags);
-// [TODO] 카테고리로 가져오기를 태그로 가져오기로 수정
 
 posts.post('/', postsCtrl.write);
 posts.patch('/:id', postsCtrl.update);
-
 posts.delete('/:id', postsCtrl.delete);
 
 posts.post('/upload', upload.single('post-rsc-pool'), postsCtrl.upload);
