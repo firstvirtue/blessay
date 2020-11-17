@@ -224,7 +224,7 @@ exports.upload = async (ctx) => {
     'success': 1,
     'file': {
       // url
-      'url': `http://${ctx.request.headers.host}/post-rsc-pool/${ctx.request.file.filename}`
+      'url': `/post-rsc-pool/${ctx.request.file.filename}`
     }
   }
 }
